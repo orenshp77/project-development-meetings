@@ -6,15 +6,15 @@ const pool = require('../config/db');
 router.get('/team/:teamId', async (req, res) => {
     try {
         const { teamId } = req.params;
-        const [rows] = await pool.query(
+        const result = await pool.query(
             `SELECT m.*, t.team_name
              FROM meetings m
              JOIN development_teams t ON m.team_id = t.team_id
-             WHERE m.team_id = ?
+             WHERE m.team_id = $1
              ORDER BY m.start_datetime`,
             [teamId]
         );
-        res.json(rows);
+        res.json(result.rows);
     } catch (error) {
         console.error('Error fetching meetings:', error);
         res.status(500).json({ error: 'Failed to fetch meetings' });
@@ -26,20 +26,20 @@ router.post('/', async (req, res) => {
     try {
         const { team_id, start_datetime, end_datetime, description, room } = req.body;
 
-        // וידוא שכל השדות קיימים
         if (!team_id || !start_datetime || !end_datetime || !description || !room) {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
-        const [result] = await pool.query(
+        const result = await pool.query(
             `INSERT INTO meetings (team_id, start_datetime, end_datetime, description, room)
-             VALUES (?, ?, ?, ?, ?)`,
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING meeting_id`,
             [team_id, start_datetime, end_datetime, description, room]
         );
 
         res.status(201).json({
             message: 'Meeting created successfully',
-            meeting_id: result.insertId
+            meeting_id: result.rows[0].meeting_id
         });
     } catch (error) {
         console.error('Error creating meeting:', error);
@@ -51,12 +51,12 @@ router.post('/', async (req, res) => {
 router.delete('/:meetingId', async (req, res) => {
     try {
         const { meetingId } = req.params;
-        const [result] = await pool.query(
-            'DELETE FROM meetings WHERE meeting_id = ?',
+        const result = await pool.query(
+            'DELETE FROM meetings WHERE meeting_id = $1 RETURNING *',
             [meetingId]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Meeting not found' });
         }
 
@@ -77,14 +77,15 @@ router.put('/:meetingId', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
-        const [result] = await pool.query(
+        const result = await pool.query(
             `UPDATE meetings
-             SET team_id = ?, start_datetime = ?, end_datetime = ?, description = ?, room = ?
-             WHERE meeting_id = ?`,
+             SET team_id = $1, start_datetime = $2, end_datetime = $3, description = $4, room = $5
+             WHERE meeting_id = $6
+             RETURNING *`,
             [team_id, start_datetime, end_datetime, description, room, meetingId]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Meeting not found' });
         }
 
