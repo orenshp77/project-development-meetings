@@ -5,8 +5,8 @@ const pool = require('../config/db');
 // GET - החזרת כל קבוצות הפיתוח
 router.get('/', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM development_teams');
-        res.json(rows);
+        const result = await pool.query('SELECT * FROM development_teams');
+        res.json(result.rows);
     } catch (error) {
         console.error('Error fetching teams:', error);
         res.status(500).json({ error: 'Failed to fetch teams' });
