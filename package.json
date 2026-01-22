@@ -1,0 +1,19 @@
+{
+  "name": "meeting-management-system",
+  "version": "1.0.0",
+  "description": "Full-stack Meeting Management System",
+  "scripts": {
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "echo 'Please run backend and frontend in separate terminals' && echo 'Backend: npm run backend' && echo 'Frontend: npm run frontend'"
+  },
+  "keywords": [
+    "meeting-management",
+    "nodejs",
+    "react",
+    "mysql"
+  ],
+  "author": "",
+  "license": "ISC"
+}

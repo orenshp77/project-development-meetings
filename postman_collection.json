@@ -1,0 +1,90 @@
+{
+  "info": {
+    "name": "Meeting Management API",
+    "description": "API Collection for Meeting Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Teams",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/teams",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "teams"]
+        },
+        "description": "החזרת כל קבוצות הפיתוח שבחברה"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Meetings by Team",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/meetings/:teamId",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "meetings", ":teamId"],
+          "variable": [
+            {
+              "key": "teamId",
+              "value": "1",
+              "description": "Team ID"
+            }
+          ]
+        },
+        "description": "החזרת כל הפגישות של קבוצת פיתוח ספציפית"
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Meetings",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/meetings",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "meetings"]
+        },
+        "description": "החזרת כל הפגישות (כל הקבוצות)"
+      },
+      "response": []
+    },
+    {
+      "name": "Create New Meeting",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"team_id\": 1,\n  \"start_datetime\": \"2025-11-28T10:00:00\",\n  \"end_datetime\": \"2025-11-28T11:00:00\",\n  \"description\": \"Testing New Meeting\",\n  \"room\": \"Blue Room\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/meetings",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "meetings"]
+        },
+        "description": "הוספת פגישה חדשה"
+      },
+      "response": []
+    }
+  ]
+}
